@@ -1,7 +1,21 @@
 # helios_camera
 ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
 
-## nodes
+
+
+## Installation
+1. Download Arena SDK: [Download](https://thinklucid.com/downloads-hub/, "arena sdk")
+2. Extract & Setup
+    <pre><code>
+      tar -xvf {download path}/ArenaSDK_{version}.tar.gz -C ~
+      cd ~/ArenaSDK_{version}
+      sudo sh Arena_SDK.conf
+      echo "export ARENA_ROOT=~/ArenaSDK{version}" >> ~/.bashrc
+      source ~/.bashrc
+    </pre></code>
+3. Install OpenCV : [Link](https://support.thinklucid.com/using-opencv-with-arena-sdk-on-linux/, "install opencv")
+
+## Nodes
 ### 1. helios_camera : starting helios 2+ ToF camera. Send PCL & intensity Image Topic
   > * **Subscribe** : None
   > * **Publish** : 
@@ -26,7 +40,7 @@ ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
   > <pre><code>rosrun helios_camre pcl_to_image</code></pre>
 
 
-## launch
+## Launch
 ### 1. helios_camera.launch : Starting helios 2+ camera & tf
   > <pre><code>roslaunch helios_camera helios_camera.launch</code></pre>
   

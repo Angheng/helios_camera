@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="helios_camera" type="helios_camera" name="cam"/>
+    <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 -0.500 0.500 -0.500 0.500 world helios_frame 100" />
+</launch>

@@ -30,7 +30,7 @@ ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
   >   + Image : "/rdv_helios_0001/color/image_rect_raw"
   >   + CameraInfo : "/rdv_helios_0001/color/camera_info"
   >
-  > <pre><code>rosrun helios_camre mv_rgb_camera</code></pre>
+  > <pre><code>rosrun mv_rgb_camera mv_rgb_camera</code></pre>
   
 ### 3. pcl_to_image : Not finished yet. Make PointCloud2 Topic to 32FC_ Image
   > * **Subscribe** :
@@ -45,7 +45,7 @@ ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
   > <pre><code>roslaunch helios_camera helios_camera.launch</code></pre>
   
 ### 2. mv_rgb_camera.launch : MV-SUF 1200GC camera with ".yaml" calibration file
-  > <pre><code>roslaunch helios_camera mv_rgb_camera.launch</code></pre>
+  > <pre><code>roslaunch mv_rgb_camera mv_rgb_camera.launch</code></pre>
   
 ### 3. mv_rgb_camera.launch : Helios 2+ ToF & MV-SUF 1200GC camera
   > <pre><code>roslaunch helios_camera rgb_depth.launch</code></pre>

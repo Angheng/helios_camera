@@ -30,8 +30,8 @@ RGB : linuxSDK_V2.1.0.33
 ### 1. helios_camera : starting helios 2+ ToF camera. Send PCL & intensity Image Topic
   > * **Subscribe** : None
   > * **Publish** : 
-  >  + PointCloud2 : "/rdv_helios_0001/depth/point"
-  >  + Image : "/rdv_helios_0001/depth/intensity_raw"
+  >   + PointCloud2 : "/rdv_helios_0001/depth/point"
+  >   + Image : "/rdv_helios_0001/depth/intensity_raw"
   >
   > <pre><code>rosrun helios_camera helios_camera</code></pre>
 

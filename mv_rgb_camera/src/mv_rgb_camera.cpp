@@ -31,9 +31,9 @@ int main(int argc, char** argv) {
     int                     channel=3; // camera channels
     unsigned char           *g_pRgbBuffer; // Buffer for saving image data.
 
-    int                     image_width = 640;
-    int                     image_height = 480;
-    int                     image_fps = 15;
+    int                     image_width = 4096;
+    int                     image_height = 3000;
+    int                     image_fps = 23;
 
 // =======================================================================
 

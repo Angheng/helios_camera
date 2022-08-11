@@ -94,4 +94,4 @@ ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
   > <pre><code>roslaunch mv_rgb_camera mv_rgb_camera.launch</code></pre>
   
 ### 3. mv_rgb_camera.launch : Helios 2+ ToF & MV-SUF 1200GC camera
-  > <pre><code>roslaunch helios_camera rgb_depth.launch</code></pre>
+  > <pre><code>roslaunch helios_camera rgb_depth_camera.launch</code></pre>

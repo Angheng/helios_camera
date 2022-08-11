@@ -1,16 +1,17 @@
 # helios_camera
 ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
 
-
+## Test Env.
+ArenaSDK_v0.1.59_Linux_x64
 
 ## Installation
 1. Download Arena SDK: [Download](https://thinklucid.com/downloads-hub/, "arena sdk")
 2. Extract & Setup
     <pre><code>
-      tar -xvf {download path}/ArenaSDK_{version}.tar.gz -C ~
-      cd ~/ArenaSDK_{version}
-      sudo sh Arena_SDK.conf
-      echo "export ARENA_ROOT=~/ArenaSDK{version}" >> ~/.bashrc
+      tar -xvf {download path}/ArenaSDK_{SDK_version}_{OS_version}.tar.gz -C ~
+      cd ~/ArenaSDK_{OS_version}
+      sudo sh Arena_SDK_{OS_version}.conf
+      echo "export ARENA_ROOT=~/ArenaSDK_{OS_version}" >> ~/.bashrc
       source ~/.bashrc
     </pre></code>
 3. Install OpenCV : [Link](https://support.thinklucid.com/using-opencv-with-arena-sdk-on-linux/, "install opencv")

@@ -1,22 +1,11 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(helios_camera)
-
-find_package(arena_sdk QUIET)
-if (NOT ${arena_sdk_FOUND})
-    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findarena_sdk.cmake")
-endif()
-# CATKIN
-#
-
+project(mv_rgb_camera)
 
 add_definitions("-std=gnu++11")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CATKIN_COMPONENTS
-     camera_control_msgs # arena_camera depends on this upper custom msg package 
-     camera_info_manager
      cv_bridge
-     image_geometry
      image_transport
      roscpp
      roslaunch 
@@ -45,49 +34,23 @@ catkin_package(
     #    <> 
 )
 
-set(helios_camera helios_camera)
+set(mv_rgb_camera mv_rgb_camera)
 
 add_executable(
-    ${helios_camera}  # runs by rosrun
-        src/helios_camera.cpp
+    ${mv_rgb_camera}  # runs by rosrun
+        src/mv_rgb_camera.cpp
 )
 
 target_include_directories(
-    ${helios_camera}
-        PRIVATE ${catkin_INCLUDE_DIRS} 
-        PRIVATE ${arena_sdk_INCLUDE_DIRS}
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
-# needed ".so"s
-target_link_libraries(
-    ${helios_camera}
-        ${catkin_LIBRARIES}
-        ${arena_sdk_LIBRARIES}
-)
-
-add_dependencies(
-    ${helios_camera}
-        # because this uses one of the catkin componenets which is camera_control_msg
-        ${catkin_EXPORTED_TARGETS} 
-)
-
-set(pcl_to_image pcl_to_image)
-
-add_executable(
-    ${pcl_to_image}  # runs by rosrun
-        src/pcl_to_image.cpp
-)
-
-target_include_directories(
-    ${pcl_to_image}
+    ${mv_rgb_camera}
         PRIVATE ${catkin_INCLUDE_DIRS}
 )
 
 # needed ".so"s
 target_link_libraries(
-    ${pcl_to_image}
+    ${mv_rgb_camera}
         ${catkin_LIBRARIES}
+        MVSDK
 )
 
 install(
@@ -108,20 +71,9 @@ install(
 
 install(
     TARGETS
-        ${helios_camera}
-        ${pcl_to_image}
+        ${mv_rgb_camera}
     LIBRARY DESTINATION
         ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION
         ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(
-    DIRECTORY
-        include/${PROJECT_NAME}/
-    DESTINATION
-        ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-    FILES_MATCHING PATTERN
-        "*.h"
-    PATTERN "internal" EXCLUDE
 )

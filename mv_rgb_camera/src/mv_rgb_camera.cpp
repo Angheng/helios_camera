@@ -113,12 +113,12 @@ int main(int argc, char** argv) {
 
     // Set Image Transport Publisher.
     image_transport::ImageTransport it(node);
-    image_transport::Publisher it_pub = it.advertise("/rdv_helios_0001/color/image_rect_raw", 10);
+    image_transport::Publisher it_pub = it.advertise("/rdv_mv_rgb_0001/color/image_rect_raw", 10);
     boost::shared_ptr<sensor_msgs::Image> color_msg(new sensor_msgs::Image);
     set_color_msg(color_msg, sImageSize.iHeight, sImageSize.iWidth, channel);
 
     // Set camera info message using "config/mv_rgb_camera.yaml" file.
-    ros::Publisher cam_pub = node.advertise<sensor_msgs::CameraInfo>("/rdv_helios_0001/color/camera_info", 1000);
+    ros::Publisher cam_pub = node.advertise<sensor_msgs::CameraInfo>("/rdv_mv_rgb_0001/color/camera_info", 1000);
     boost::shared_ptr<sensor_msgs::CameraInfo> camera_info_msg(new sensor_msgs::CameraInfo);
     set_camera_info(node, camera_info_msg, sImageSize.iHeight, sImageSize.iWidth);
 

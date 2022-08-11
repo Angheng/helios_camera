@@ -35,13 +35,40 @@ ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
   >   + Image : "/rdv_helios_0001/depth/intensity_raw"
   >   
   > * **parameters**:
-  >   + **mode** : Set Scan 3d Operating Mode (default : "Distance3000mmSingleFreq")
-  >   + **exp_time** : Set Exposure time (default : "Exp1000Us")
-  >   + **gain** : Set Conversion gain (default : "Low")
-  >   + **accumulation** : Set Image accumulation (default : 2)
+  >   + **mode** : String, Set Scan 3d Operating Mode (default : "Distance3000mmSingleFreq")
+  >     - Distance1500mm
+  >     - Distance6000mm
+  >     - Freq100MHz
+  >     - Freq75MHz
+  >     - Freq50MHz
+  >     - Freq25MHz
+  >     - Freq120MHz
+  >     - Distance1250mmSingleFreq
+  >     - Distance3000mmSingleFreq
+  >     - Distance4000mmSingleFreq
+  >     - Distance5000mmMultiFreq
+  >     - Distance6000mmSingleFreq
+  >     - Distance8300mmMultiFreq
+  >     - Freq90MHz
+  >     - HighSpeedDistance625mmSingleFreq
+  >     - HighSpeedDistance1250mmSingleFreq
+  >     - HighSpeedDistance2500mmSingleFreq
+  >   + **exp_time** : String, Set Exposure time (default : "Exp1000Us")
+  >     - Exp62_5Us
+  >     - Exp187_5Us
+  >     - Exp250Us
+  >     - Exp750Us
+  >     - Exp750Us
+  >     - Exp3000Us
+  >   + **gain** : String, Set Conversion gain (default : "Low")
+  >     - Low
+  >     - High
+  >   + **accumulation** : Integer, Set Image accumulation (default : 2)
+  >     - 0 ~ n
   >
   > <pre><code>rosrun helios_camera helios_camera</code></pre>
   > <pre><code>rosrun helios_camera helios_camera _mode:=Distance3000mmSingleFreq</code></pre>
+  > <pre><code>rosrun helios_camera helios_camera _exp_time:=Exp250Us _gain:= High _accumulation:=4</code></pre>
 
 ### 2. mv_rgb_camera : starting MV-SUF 1200GC camera. Send RGB Image & CameraInfo Topic
   > * **Subscribe** : None

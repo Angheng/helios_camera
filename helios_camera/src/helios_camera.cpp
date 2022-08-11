@@ -94,6 +94,7 @@ public:
 
             pcl_pub.publish(pcl_msg);
             intensity_pub.publish(intensity_msg);
+            cam_pub.publish(camera_info_msg);
         }
         lock.unlock();
     }
@@ -289,8 +290,8 @@ void set_intensity_msg(sensor_msgs::ImagePtr msg) {
     msg->height = 480;
     msg->width = 640;
     msg->is_bigendian = false;
-    msg->step = 640;
-    msg->data.resize(640*480);
+    msg->step = 640 * 2;
+    msg->data.resize(2 * 640*480);
 
     intensity_data = reinterpret_cast<uint16_t *>(&intensity_msg->data[0]);
 }

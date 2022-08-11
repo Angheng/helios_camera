@@ -32,6 +32,12 @@ RGB : linuxSDK_V2.1.0.33
   > * **Publish** : 
   >   + PointCloud2 : "/rdv_helios_0001/depth/point"
   >   + Image : "/rdv_helios_0001/depth/intensity_raw"
+  >   
+  > * **parameters**:
+  >   + **mode** : Set Scan 3d Operating Mode (default : "Distance3000mmSingleFreq")
+  >   + **exp_time** : Set Exposure time (default : "Exp1000Us")
+  >   + **gain** : Set Conversion gain (default : "Low")
+  >   + **accumulation** : Set Image accumulation (default : 2)
   >
   > <pre><code>rosrun helios_camera helios_camera</code></pre>
 

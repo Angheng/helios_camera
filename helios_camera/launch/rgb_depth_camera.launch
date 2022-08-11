@@ -1,5 +1,5 @@
 <launch>
-    <rosparam command="load" file="$(find helios_camera)/config/mv_camera_calibration.yaml" />
+    <rosparam command="load" file="$(find mv_rgb_camera)/config/mv_camera_calibration.yaml" />
     <node pkg="mv_rgb_camera" type="mv_rgb_camera" name="mv_camera">
         <param name="fps" value="15"/>
     </node>

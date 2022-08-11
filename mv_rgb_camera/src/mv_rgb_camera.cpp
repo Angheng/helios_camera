@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
     }else{
         ROS_WARN("[INIT CAMERA]: Camera sensor => COLOR. Streaing Color Image.");
         channel=3;
-        CameraSetIspOutFormat(hCamera,CAMERA_MEDIA_TYPE_BGR8);
+        CameraSetIspOutFormat(hCamera,CAMERA_MEDIA_TYPE_RGB8);
     }
 
     ROS_INFO("[INIT CAMERA]: Done.");

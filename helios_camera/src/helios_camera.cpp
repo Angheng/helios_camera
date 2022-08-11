@@ -56,7 +56,7 @@ void set_pcl_msg(sensor_msgs::PointCloud2Ptr msg);
 void set_intensity_msg(sensor_msgs::ImagePtr msg);
 void set_camera_info(Arena::IDevice* pDevice, sensor_msgs::CameraInfoPtr msg);
 
-void init_cam();
+void init_cam(ros::NodeHandle &node);
 void init_publisher(ros::NodeHandle &node);
 void signal_handler(int sig);
 
@@ -133,7 +133,7 @@ int main(int argc, char** argv) {
     try 
     {
         // Initializing Arena Camera Options.
-        init_cam();
+        init_cam(node);
         ROS_INFO("[INIT] : Init Complete.");
 
         // Set ros publisher & message.
@@ -165,7 +165,7 @@ int main(int argc, char** argv) {
 
 // =======================================================================
 
-void init_cam() {
+void init_cam(ros::NodeHandle &node) {
     ROS_INFO("[INIT] : Start Init.");
     pSystem = Arena::OpenSystem();
 
@@ -220,10 +220,14 @@ void init_cam() {
     Arena::SetNodeValue<bool>(pDevice->GetTLStreamNodeMap(), "StreamPacketResendEnable", true);
 
     // Camera Setting for Smoothing depth image.
-    Arena::SetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "Scan3dOperatingMode", "Distance3000mmSingleFreq");
-    Arena::SetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "ExposureTimeSelector", "Exp1000Us");
-    Arena::SetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "ConversionGain", "Low");
-    Arena::SetNodeValue<int64_t>(pDevice->GetNodeMap(), "Scan3dImageAccumulation", 2);
+    Arena::SetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "Scan3dOperatingMode", node.param<std::string>("mode", "Distance3000mmSingleFreq").c_str());
+    ROS_INFO("[INIT] : Scan3d Operating Mode Set to => %s", Arena::GetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "Scan3dOperatingMode").c_str());
+    Arena::SetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "ExposureTimeSelector", node.param<std::string>("exp_time", "Exp1000Us").c_str());
+    ROS_INFO("[INIT] : Exposure time Set to => %s", Arena::GetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "ExposureTimeSelector").c_str());
+    Arena::SetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "ConversionGain", node.param<std::string>("gain", "Low").c_str());
+    ROS_INFO("[INIT] : Conversion Gain Set to => %s", Arena::GetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "ConversionGain").c_str());
+    Arena::SetNodeValue<int64_t>(pDevice->GetNodeMap(), "Scan3dImageAccumulation", (int64_t)node.param<int>("accumulation", 2));
+    ROS_INFO("[INIT] : Image Accumulation Set to => %ld", Arena::GetNodeValue<int64_t>(pDevice->GetNodeMap(), "Scan3dImageAccumulation"));
     Arena::SetNodeValue<bool>(pDevice->GetNodeMap(), "Scan3dSpatialFilterEnable", true);
     Arena::SetNodeValue<bool>(pDevice->GetNodeMap(), "Scan3dConfidenceThresholdEnable", true);
 

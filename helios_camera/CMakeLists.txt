@@ -33,6 +33,10 @@ find_package(
         ${CATKIN_COMPONENTS}
 )
 
+find_package(
+    OpenCV 3.2.0 REQUIRED
+)
+
 catkin_package(
     # INCLUDE_DIRS
     #     include

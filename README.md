@@ -2,9 +2,11 @@
 ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
 
 ## Test Env.
-ArenaSDK_v0.1.59_Linux_x64
+ToF : ArenaSDK_v0.1.59_Linux_x64
+RGB : linuxSDK_V2.1.0.33
 
 ## Installation
+### Install Helios2+ ToF Camera
 1. Download Arena SDK: [Download](https://thinklucid.com/downloads-hub/, "arena sdk")
 2. Extract & Setup
     <pre><code>
@@ -15,7 +17,8 @@ ArenaSDK_v0.1.59_Linux_x64
       source ~/.bashrc
     </pre></code>
 3. Install OpenCV : [Link](https://support.thinklucid.com/using-opencv-with-arena-sdk-on-linux/, "install opencv")
-4. Install MVSDK
+### Inatll MV-SUF 1200GC RGB Camera
+1. Install MVSDK
     <pre><code>
       mkdir ~/MVSDK
       tar -xvzf linuxSDK_V2.1.0.33.tar.gz -C ~/MVSDK/
@@ -35,8 +38,8 @@ ArenaSDK_v0.1.59_Linux_x64
 ### 2. mv_rgb_camera : starting MV-SUF 1200GC camera. Send RGB Image & CameraInfo Topic
   > * **Subscribe** : None
   > * **Publish** : 
-  >   + Image : "/rdv_helios_0001/color/image_rect_raw"
-  >   + CameraInfo : "/rdv_helios_0001/color/camera_info"
+  >   + Image : "/rdv_mv_rgb_0001/color/image_rect_raw"
+  >   + CameraInfo : "/rdv_mv_rgb_0001/color/camera_info"
   >
   > <pre><code>rosrun mv_rgb_camera mv_rgb_camera</code></pre>
   

@@ -36,30 +36,30 @@ ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
   >   
   > * **parameters**:
   >   + **mode** : String, Set Scan 3d Operating Mode (default : "Distance3000mmSingleFreq")
-  >     - Distance1500mm
-  >     - Distance6000mm
-  >     - Freq100MHz
-  >     - Freq75MHz
-  >     - Freq50MHz
-  >     - Freq25MHz
-  >     - Freq120MHz
+  >     - ~~Distance1500mm~~
+  >     - ~~Distance6000mm~~
+  >     - ~~Freq100MHz~~
+  >     - ~~Freq90MHz~~
+  >     - ~~Freq75MHz~~
+  >     - ~~Freq50MHz~~
+  >     - ~~Freq25MHz~~
+  >     - ~~Freq120MHz~~
   >     - Distance1250mmSingleFreq
   >     - Distance3000mmSingleFreq
   >     - Distance4000mmSingleFreq
   >     - Distance5000mmMultiFreq
   >     - Distance6000mmSingleFreq
   >     - Distance8300mmMultiFreq
-  >     - Freq90MHz
   >     - HighSpeedDistance625mmSingleFreq
   >     - HighSpeedDistance1250mmSingleFreq
   >     - HighSpeedDistance2500mmSingleFreq
   >   + **exp_time** : String, Set Exposure time (default : "Exp1000Us")
   >     - Exp62_5Us
-  >     - Exp187_5Us
+  >     - ~~Exp187_5Us~~
   >     - Exp250Us
-  >     - Exp750Us
-  >     - Exp750Us
-  >     - Exp3000Us
+  >     - ~~Exp750Us~~
+  >     - Exp1000Us
+  >     - ~~Exp3000Us~~
   >   + **gain** : String, Set Conversion gain (default : "Low")
   >     - Low
   >     - High

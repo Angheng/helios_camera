@@ -40,6 +40,7 @@ RGB : linuxSDK_V2.1.0.33
   >   + **accumulation** : Set Image accumulation (default : 2)
   >
   > <pre><code>rosrun helios_camera helios_camera</code></pre>
+  > <pre><code>rosrun helios_camera helios_camera _mode:=Distance3000mmSingleFreq</code></pre>
 
 ### 2. mv_rgb_camera : starting MV-SUF 1200GC camera. Send RGB Image & CameraInfo Topic
   > * **Subscribe** : None

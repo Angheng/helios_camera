@@ -17,7 +17,7 @@ void callback(sensor_msgs::PointCloud2ConstPtr msg) {
 
 void mouseCallback(int event, int x, int y, int flags, void* user_data) {
     if (event == CV_EVENT_LBUTTONDOWN) {
-        ROS_INFO("Clicked => ( %d, %d )\n\n <distance>\nX : %f\nY : %f\nZ : %f\nIntensity : %f",
+        ROS_INFO("Clicked => ( %d, %d )\n\n <distance>\nX : %d\nY : %d\nZ : %d\nIntensity : %d",
             x, y, tmp.data[4 * (x + 640*y)], tmp.data[4 * (x + 640*y) + 1], tmp.data[4 * (x + 640*y) + 2], tmp.data[4 * (x + 640*y) + 3]
          );
     }

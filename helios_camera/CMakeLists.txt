@@ -11,6 +11,7 @@ endif()
 
 add_definitions("-std=gnu++11")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} [OpenCV.cmake PATH])
 
 set(CATKIN_COMPONENTS
      camera_control_msgs # arena_camera depends on this upper custom msg package 
@@ -33,9 +34,8 @@ find_package(
         ${CATKIN_COMPONENTS}
 )
 
-find_package(
-    OpenCV 3.2.0 REQUIRED
-)
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIR})
 
 catkin_package(
     # INCLUDE_DIRS
@@ -91,7 +91,8 @@ target_include_directories(
 # needed ".so"s
 target_link_libraries(
     ${pcl_to_image}
-        ${catkin_LIBRARIES}
+       ${catkin_LIBRARIES}
+       ${OpenCV_LIBRARIES}
 )
 
 install(

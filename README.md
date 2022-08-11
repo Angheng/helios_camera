@@ -2,8 +2,9 @@
 ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
 
 ## Test Env.
-ToF : ArenaSDK_v0.1.59_Linux_x64
-RGB : linuxSDK_V2.1.0.33
+- ToF : ArenaSDK_v0.1.59_Linux_x64
+- RGB : linuxSDK_V2.1.0.33
+- Ubuntu 18.04 amd64, ROS Melodic
 
 ## Installation
 ### Install Helios2+ ToF Camera
@@ -17,7 +18,7 @@ RGB : linuxSDK_V2.1.0.33
       source ~/.bashrc
     </pre></code>
 3. Install OpenCV : [Link](https://support.thinklucid.com/using-opencv-with-arena-sdk-on-linux/, "install opencv")
-### Inatll MV-SUF 1200GC RGB Camera
+### Install MV-SUF 1200GC RGB Camera
 1. Install MVSDK
     <pre><code>
       mkdir ~/MVSDK

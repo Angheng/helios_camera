@@ -125,11 +125,6 @@ int main(int argc, char** argv) {
     ros::init(argc, argv, "helios_camera", ros::init_options::NoSigintHandler);
     ros::NodeHandle node("~");
 
-    std::string mode = "";
-    mode = node.param<std::string>("mode", "Distance3000mmSingleFreq");
-    // node.getParam("mode", mode);
-    std::cout << mode << std::endl;
-
     // Create Signal handler.
     signal(SIGINT, signal_handler);
 

@@ -15,6 +15,13 @@ ArenaSDK_v0.1.59_Linux_x64
       source ~/.bashrc
     </pre></code>
 3. Install OpenCV : [Link](https://support.thinklucid.com/using-opencv-with-arena-sdk-on-linux/, "install opencv")
+4. Install MVSDK
+    <pre><code>
+      mkdir ~/MVSDK
+      tar -xvzf linuxSDK_V2.1.0.33.tar.gz -C ~/MVSDK/
+      cd ~/MVSDK
+      sudo ./install.sh
+    </pre></code>
 
 ## Nodes
 ### 1. helios_camera : starting helios 2+ ToF camera. Send PCL & intensity Image Topic

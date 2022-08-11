@@ -30,7 +30,7 @@ ArenaSDK_v0.1.59_Linux_x64
   >  + PointCloud2 : "/rdv_helios_0001/depth/point"
   >  + Image : "/rdv_helios_0001/depth/intensity_raw"
   >
-  > <pre><code>rosrun helios_camre helios_camera</code></pre>
+  > <pre><code>rosrun helios_camera helios_camera</code></pre>
 
 ### 2. mv_rgb_camera : starting MV-SUF 1200GC camera. Send RGB Image & CameraInfo Topic
   > * **Subscribe** : None
@@ -45,7 +45,7 @@ ArenaSDK_v0.1.59_Linux_x64
   >   + PointCloud2 : "/rdv_helios_0001/depth/point"
   > * **Publish** : None
   >
-  > <pre><code>rosrun helios_camre pcl_to_image</code></pre>
+  > <pre><code>rosrun helios_camera pcl_to_image</code></pre>
 
 
 ## Launch

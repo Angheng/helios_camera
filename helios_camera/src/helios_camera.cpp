@@ -12,6 +12,7 @@
 #include "ros/ros.h"
 #include "sensor_msgs/PointCloud2.h"
 #include "sensor_msgs/Image.h"
+#include "sensor_msgs/CameraInfo.h"
 
 
 #define CONNECT_TIMEOUT 1000
@@ -23,6 +24,8 @@ ros::Publisher pcl_pub;
 boost::shared_ptr<sensor_msgs::PointCloud2> pcl_msg(new sensor_msgs::PointCloud2);
 ros::Publisher intensity_pub;
 boost::shared_ptr<sensor_msgs::Image> intensity_msg(new sensor_msgs::Image);
+ros::Publisher cam_pub;
+boost::shared_ptr<sensor_msgs::CameraInfo> camera_info_msg(new sensor_msgs::CameraInfo);
 
 float* pcl_data;
 uint16_t* intensity_data;
@@ -51,6 +54,8 @@ std::mutex lock;
 
 void set_pcl_msg(sensor_msgs::PointCloud2Ptr msg);
 void set_intensity_msg(sensor_msgs::ImagePtr msg);
+void set_camera_info(Arena::IDevice* pDevice, sensor_msgs::CameraInfoPtr msg);
+
 void init_cam();
 void init_publisher(ros::NodeHandle &node);
 void signal_handler(int sig);
@@ -65,7 +70,7 @@ public:
     ~ImageCallback() {}
 
     static void send_msgs(Arena::IImage* pImage) {
-        pcl_msg->header.stamp = intensity_msg->header.stamp = ros::Time::now();
+        pcl_msg->header.stamp = camera_info_msg->header.stamp = intensity_msg->header.stamp = ros::Time::now();
 
         const uint8_t *pInput = pImage->GetData();
         const uint8_t *pIn = pInput;
@@ -118,7 +123,7 @@ public:
 int main(int argc, char** argv) {
     // Initializing ROS.
     ros::init(argc, argv, "helios_camera", ros::init_options::NoSigintHandler);
-    ros::NodeHandle node;
+    ros::NodeHandle node("~");
 
     // Create Signal handler.
     signal(SIGINT, signal_handler);
@@ -241,6 +246,10 @@ void init_publisher(ros::NodeHandle &node) {
     // Initializing Intensity Image Publisher & Message.
     intensity_pub = node.advertise<sensor_msgs::Image>("/rdv_helios_0001/depth/intensity_raw", 10);
     set_intensity_msg(intensity_msg);
+
+    // Initializing CameraInfo Publisher & Message.
+    cam_pub = node.advertise<sensor_msgs::CameraInfo>("/rdv_helios_0001/depth/camera_info", 1000);
+    set_camera_info(pDevice, camera_info_msg);
 }
 
 // Setting for Point Cloud Message.
@@ -280,6 +289,40 @@ void set_intensity_msg(sensor_msgs::ImagePtr msg) {
     msg->data.resize(640*480);
 
     intensity_data = reinterpret_cast<uint16_t *>(&intensity_msg->data[0]);
+}
+
+void set_camera_info(Arena::IDevice* pDevice, sensor_msgs::CameraInfoPtr msg) {
+    msg->header.frame_id = "helios_frame";
+    msg->height = 480;
+    msg->width = 640;
+    msg->distortion_model = "plumb_bob";
+
+    double fx = Arena::GetNodeValue<double>(pDevice->GetNodeMap(), "CalibFocalLengthX");
+    double fy = Arena::GetNodeValue<double>(pDevice->GetNodeMap(), "CalibFocalLengthY");
+    double px = Arena::GetNodeValue<double>(pDevice->GetNodeMap(), "CalibOpticalCenterX");
+    double py = Arena::GetNodeValue<double>(pDevice->GetNodeMap(), "CalibOpticalCenterY");
+
+    for (int i=0; i<5; i++) {
+        GenICam::gcstring tmp = ("Value"+std::to_string(i)).c_str();
+        Arena::SetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "CalibLensDistortionValueSelector", tmp);
+        msg->D.push_back(Arena::GetNodeValue<double>(pDevice->GetNodeMap(), "CalibLensDistortionValue"));
+    }
+    
+    msg->K = {
+        fx, 0.0, px,
+        0.0, fy, py,
+        0.0, 0.0, 1.0
+    };
+    msg->R = {
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0
+    };
+    msg->P = {
+        fx, 0.0, px, 0.0,
+        0.0, fy, py, 0.0,
+        0.0, 0.0, 1.0, 0.0
+    };
 }
 
 // =======================================================================

@@ -14,6 +14,8 @@
 #include "sensor_msgs/Image.h"
 #include "sensor_msgs/CameraInfo.h"
 
+#include "opencv2/opencv.hpp"
+
 
 #define CONNECT_TIMEOUT 1000
 
@@ -26,12 +28,15 @@ ros::Publisher intensity_pub;
 boost::shared_ptr<sensor_msgs::Image> intensity_msg(new sensor_msgs::Image);
 ros::Publisher xyz_mm_pub;
 boost::shared_ptr<sensor_msgs::Image> xyz_mm_msg(new sensor_msgs::Image);
+ros::Publisher xyz_color_pub;
+boost::shared_ptr<sensor_msgs::Image> xyz_color_msg(new sensor_msgs::Image);
 ros::Publisher cam_pub;
 boost::shared_ptr<sensor_msgs::CameraInfo> camera_info_msg(new sensor_msgs::CameraInfo);
 
 float* pcl_data;
 uint16_t* intensity_data;
 float* xyz_mm_data;
+uint8_t* xyz_color_data;
 
 // Areana Key variables.
 Arena::ISystem* pSystem; // variable for camera sysyem
@@ -59,6 +64,7 @@ void set_pcl_msg(sensor_msgs::PointCloud2Ptr msg);
 void set_intensity_msg(sensor_msgs::ImagePtr msg);
 void set_xyz_mm_msg(sensor_msgs::ImagePtr msg);
 void set_camera_info(Arena::IDevice* pDevice, sensor_msgs::CameraInfoPtr msg);
+void set_xyz_color_msg(sensor_msgs::ImagePtr msg);
 
 void init_cam(ros::NodeHandle &node);
 void init_publisher(ros::NodeHandle &node);
@@ -74,7 +80,7 @@ public:
     ~ImageCallback() {}
 
     static void send_msgs(Arena::IImage* pImage) {
-        pcl_msg->header.stamp = camera_info_msg->header.stamp = intensity_msg->header.stamp = ros::Time::now();
+        pcl_msg->header.stamp = camera_info_msg->header.stamp = intensity_msg->header.stamp = xyz_mm_msg->header.stamp = xyz_color_msg->header.stamp = ros::Time::now();
 
         const uint8_t *pInput = pImage->GetData();
         const uint8_t *pIn = pInput;
@@ -96,9 +102,18 @@ public:
                 pIn += 8;
             }
 
+            cv::Mat tmp(480, 640, CV_32FC3, (void*)xyz_mm_msg->data.data());
+            tmp.convertTo(tmp, CV_8UC3, 255);
+            std::memcpy(
+                &xyz_color_msg->data[0],
+                (void*)tmp.data,
+                3*640*480
+            );
+
             pcl_pub.publish(pcl_msg);
             intensity_pub.publish(intensity_msg);
             xyz_mm_pub.publish(xyz_mm_msg);
+            xyz_color_pub.publish(xyz_color_msg);
             cam_pub.publish(camera_info_msg);
         }
         lock.unlock();
@@ -176,7 +191,7 @@ void init_cam(ros::NodeHandle &node) {
     pSystem = Arena::OpenSystem();
 
     // Find devices during 3 Sec.
-    ROS_INFO("[INIT] : Find Camera devices during 3 second...");
+    ROS_INFO("[INIT] : Find Camera devices during 1 second...");
     pSystem->UpdateDevices(CONNECT_TIMEOUT);
     std::vector<Arena::DeviceInfo> deviceInfos = pSystem->GetDevices();
 
@@ -191,7 +206,7 @@ void init_cam(ros::NodeHandle &node) {
     // Set Using device to first ine.
     pDevice = pSystem->CreateDevice(deviceInfos[0]);
     SN = Arena::GetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "DeviceSerialNumber");
-    ROS_INFO("[INIT]: Using Camera device[0] => SN : %s", SN.c_str());
+    ROS_INFO("[INIT] : Using Camera device[0] => SN : %s", SN.c_str());
 
     // save Camera setting.
     operatingModeInitial = Arena::GetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "Scan3dOperatingMode");
@@ -211,7 +226,7 @@ void init_cam(ros::NodeHandle &node) {
 	Arena::SetNodeValue<GenICam::gcstring>(pDevice->GetNodeMap(), "Scan3dCoordinateSelector", "CoordinateC");
 	scaleZ = Arena::GetNodeValue<double>(pDevice->GetNodeMap(), "Scan3dCoordinateScale");
 
-    ROS_INFO("[INIT]: Loading camera setting done.");
+    ROS_INFO("[INIT] : Loading camera setting done.");
 
     // Camera Setting for Connections.
     Arena::SetNodeValue<GenICam::gcstring> (pDevice->GetNodeMap(),
@@ -259,6 +274,8 @@ void init_publisher(ros::NodeHandle &node) {
 
     xyz_mm_pub = node.advertise<sensor_msgs::Image>("/rdv_helios_0001/depth/xyz_mm_raw", 10);
     set_xyz_mm_msg(xyz_mm_msg);
+    xyz_color_pub = node.advertise<sensor_msgs::Image>("/rdv_helios_0001/depth/xyz_color_raw", 10);
+    set_xyz_color_msg(xyz_color_msg);
 
     // Initializing CameraInfo Publisher & Message.
     cam_pub = node.advertise<sensor_msgs::CameraInfo>("/rdv_helios_0001/depth/camera_info", 1000);
@@ -314,6 +331,18 @@ void set_xyz_mm_msg(sensor_msgs::ImagePtr msg) {
     msg->data.resize(12 * 640*480);
 
     xyz_mm_data = reinterpret_cast<float *>(&xyz_mm_msg->data[0]);
+}
+
+void set_xyz_color_msg(sensor_msgs::ImagePtr msg) {
+    msg->header.frame_id = "helios_frame";
+    msg->encoding = "8UC3";
+    msg->height = 480;
+    msg->width = 640;
+    msg->is_bigendian = false;
+    msg->step = 640 * 3;
+    msg->data.resize(3 * 640*480);
+
+    xyz_color_data =reinterpret_cast<uint8_t*>(&xyz_color_msg->data[0]);
 }
 
 void set_camera_info(Arena::IDevice* pDevice, sensor_msgs::CameraInfoPtr msg) {

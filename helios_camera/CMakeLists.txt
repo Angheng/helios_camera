@@ -68,6 +68,7 @@ target_link_libraries(
     ${helios_camera}
         ${catkin_LIBRARIES}
         ${arena_sdk_LIBRARIES}
+        ${OpenCV_LIBRARIES}
 )
 
 add_dependencies(

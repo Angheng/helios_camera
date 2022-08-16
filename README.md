@@ -33,6 +33,8 @@ ROS package for Helios 2+ ToF camera & MV-SUF 1200GC RGB Camera
   > * **Publish** : 
   >   + PointCloud2 : "/rdv_helios_0001/depth/point"
   >   + Image : "/rdv_helios_0001/depth/intensity_raw"
+  >   + Image : "/rdv_helios_0001/depth/xyz_mm_raw"
+  >   + Image : "/rdv_helios_0001/depth/xyz_color_raw"
   >   
   > * **parameters**:
   >   + **mode** : String, Set Scan 3d Operating Mode (default : "Distance3000mmSingleFreq")

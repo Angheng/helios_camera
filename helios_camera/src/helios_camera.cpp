@@ -24,11 +24,14 @@ ros::Publisher pcl_pub;
 boost::shared_ptr<sensor_msgs::PointCloud2> pcl_msg(new sensor_msgs::PointCloud2);
 ros::Publisher intensity_pub;
 boost::shared_ptr<sensor_msgs::Image> intensity_msg(new sensor_msgs::Image);
+ros::Publisher xyz_mm_pub;
+boost::shared_ptr<sensor_msgs::Image> xyz_mm_msg(new sensor_msgs::Image);
 ros::Publisher cam_pub;
 boost::shared_ptr<sensor_msgs::CameraInfo> camera_info_msg(new sensor_msgs::CameraInfo);
 
 float* pcl_data;
 uint16_t* intensity_data;
+float* xyz_mm_data;
 
 // Areana Key variables.
 Arena::ISystem* pSystem; // variable for camera sysyem
@@ -54,6 +57,7 @@ std::mutex lock;
 
 void set_pcl_msg(sensor_msgs::PointCloud2Ptr msg);
 void set_intensity_msg(sensor_msgs::ImagePtr msg);
+void set_xyz_mm_msg(sensor_msgs::ImagePtr msg);
 void set_camera_info(Arena::IDevice* pDevice, sensor_msgs::CameraInfoPtr msg);
 
 void init_cam(ros::NodeHandle &node);
@@ -83,9 +87,9 @@ public:
                 uint16_t z_raw = *reinterpret_cast<const uint16_t*>((pIn+4));
                 uint16_t i_raw = *reinterpret_cast<const uint16_t*>((pIn+6));
 
-                pcl_data[4*i] = ((float)x_raw * scaleX + offsetX) * 0.001f;
-                pcl_data[4*i + 1] = ((float)y_raw * scaleY + offsetY) * 0.001f;
-                pcl_data[4*i + 2] = (z_raw == 0) ? std::numeric_limits<float>::quiet_NaN () : ((float)z_raw * scaleZ) * 0.001f;
+                pcl_data[4*i] = xyz_mm_data[3*i] = ((float)x_raw * scaleX + offsetX) * 0.001f;
+                pcl_data[4*i + 1] = xyz_mm_data[3*i + 1] = ((float)y_raw * scaleY + offsetY) * 0.001f;
+                pcl_data[4*i + 2] = xyz_mm_data[3*i + 2] = (z_raw == 0) ? std::numeric_limits<float>::quiet_NaN () : ((float)z_raw * scaleZ) * 0.001f;
                 pcl_data[4*i + 3] = (float)i_raw;
                 intensity_data[i] = i_raw;
 
@@ -94,6 +98,7 @@ public:
 
             pcl_pub.publish(pcl_msg);
             intensity_pub.publish(intensity_msg);
+            xyz_mm_pub.publish(xyz_mm_msg);
             cam_pub.publish(camera_info_msg);
         }
         lock.unlock();
@@ -252,6 +257,9 @@ void init_publisher(ros::NodeHandle &node) {
     intensity_pub = node.advertise<sensor_msgs::Image>("/rdv_helios_0001/depth/intensity_raw", 10);
     set_intensity_msg(intensity_msg);
 
+    xyz_mm_pub = node.advertise<sensor_msgs::Image>("/rdv_helios_0001/depth/xyz_mm_raw", 10);
+    set_xyz_mm_msg(xyz_mm_msg);
+
     // Initializing CameraInfo Publisher & Message.
     cam_pub = node.advertise<sensor_msgs::CameraInfo>("/rdv_helios_0001/depth/camera_info", 1000);
     set_camera_info(pDevice, camera_info_msg);
@@ -276,7 +284,7 @@ void set_pcl_msg(sensor_msgs::PointCloud2Ptr msg) {
     msg->fields[2].name = "z";
     msg->fields[3].name = "intensity";
 
-    for (int i=0; i < 3; i++) {
+    for (int i=0; i < 4; i++) {
         msg->fields[i].count = 1;
         msg->fields[i].datatype = 7;
         msg->fields[i].offset = i*4;
@@ -294,6 +302,18 @@ void set_intensity_msg(sensor_msgs::ImagePtr msg) {
     msg->data.resize(2 * 640*480);
 
     intensity_data = reinterpret_cast<uint16_t *>(&intensity_msg->data[0]);
+}
+
+void set_xyz_mm_msg(sensor_msgs::ImagePtr msg) {
+    msg->header.frame_id = "helios_frame";
+    msg->encoding = "32FC3";
+    msg->height = 480;
+    msg->width = 640;
+    msg->is_bigendian = false;
+    msg->step = 640 * 12;
+    msg->data.resize(12 * 640*480);
+
+    xyz_mm_data = reinterpret_cast<float *>(&xyz_mm_msg->data[0]);
 }
 
 void set_camera_info(Arena::IDevice* pDevice, sensor_msgs::CameraInfoPtr msg) {

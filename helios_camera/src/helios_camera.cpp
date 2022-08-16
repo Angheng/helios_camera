@@ -335,7 +335,7 @@ void set_xyz_mm_msg(sensor_msgs::ImagePtr msg) {
 
 void set_xyz_color_msg(sensor_msgs::ImagePtr msg) {
     msg->header.frame_id = "helios_frame";
-    msg->encoding = "8UC3";
+    msg->encoding = "bgr8";
     msg->height = 480;
     msg->width = 640;
     msg->is_bigendian = false;
